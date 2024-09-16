@@ -1,0 +1,34 @@
+model User {
+  id Int @id @default(autoincrement())
+  uid String
+  password String
+  boards Board[]
+  reviews Review[]
+}
+
+model Board {
+  id Int @id @default(autoincrement())
+  title String
+  content String
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  reviews Review[]
+}
+
+model Review {
+  id Int @id @default(autoincrement())
+  userId Int
+  boardId Int
+  content String
+  user    User   @relation(fields: [userId], references: [id])
+  board   Board  @relation(fields: [boardId], references: [id])
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
